@@ -37,6 +37,10 @@ namespace Sitecore.Services.Plugin.Sample
             updateItemDefinitionAction.Parameter<string>("itemDefinition");
             updateItemDefinitionAction.ReturnsFromEntitySet<CommerceCommand>("Commands");
 
+            ActionConfiguration createPriceCardAction = modelBuilder.Action("CreatePriceCard");
+            updateItemDefinitionAction.Parameter<string>("itemId");
+            updateItemDefinitionAction.Parameter<decimal>("price");
+            createPriceCardAction.ReturnsFromEntitySet<CommerceCommand>("Commands");
 
             return Task.FromResult(modelBuilder);
         }

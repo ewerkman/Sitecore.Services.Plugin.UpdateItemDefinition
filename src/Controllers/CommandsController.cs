@@ -44,5 +44,28 @@ namespace Sitecore.Services.Plugin.Sample.Controllers
 
             return new ObjectResult(command);
         }
+
+        [HttpPut]
+        [Route("CreatePriceCard")]
+        public async Task<IActionResult> CreatePriceCard([FromBody] ODataActionParameters value)
+        {
+            if (!this.ModelState.IsValid || value == null)
+            {
+                return (IActionResult)new BadRequestObjectResult(this.ModelState);
+            }
+
+            if (!value.ContainsKey("itemId") || !value.ContainsKey("price"))
+            {
+                return (IActionResult)new BadRequestObjectResult((object)value);
+            }
+
+            var itemId = value["itemId"].ToString();
+            var price = decimal.Parse( value["price"].ToString());
+
+            var command = this.Command<CreatePriceCardCommand>();
+            await command.Process(this.CurrentContext, itemId, price).ConfigureAwait(false);
+
+            return new ObjectResult(command);
+        }
     }
 }
