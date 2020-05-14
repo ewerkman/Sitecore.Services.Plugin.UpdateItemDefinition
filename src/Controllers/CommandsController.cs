@@ -67,5 +67,51 @@ namespace Sitecore.Services.Plugin.Sample.Controllers
 
             return new ObjectResult(command);
         }
+
+        [HttpPut]
+        [Route("AddNewPriceSnapshot")]
+        public async Task<IActionResult> AddNewPriceSnapshot([FromBody] ODataActionParameters value)
+        {
+            if (!this.ModelState.IsValid || value == null)
+            {
+                return (IActionResult)new BadRequestObjectResult(this.ModelState);
+            }
+
+            if (!value.ContainsKey("itemId") || !value.ContainsKey("price"))
+            {
+                return (IActionResult)new BadRequestObjectResult((object)value);
+            }
+
+            var itemId = value["itemId"].ToString();
+            var price = decimal.Parse(value["price"].ToString());
+
+            var command = this.Command<AddNewPriceSnapshotCommand>();
+            await command.Process(this.CurrentContext, itemId, price).ConfigureAwait(false);
+
+            return new ObjectResult(command);
+        }
+
+        [HttpPut]
+        [Route("UpdatePriceSnapshot")]
+        public async Task<IActionResult> UpdatePriceSnapshot([FromBody] ODataActionParameters value)
+        {
+            if (!this.ModelState.IsValid || value == null)
+            {
+                return (IActionResult)new BadRequestObjectResult(this.ModelState);
+            }
+
+            if (!value.ContainsKey("itemId") || !value.ContainsKey("price"))
+            {
+                return (IActionResult)new BadRequestObjectResult((object)value);
+            }
+
+            var itemId = value["itemId"].ToString();
+            var price = decimal.Parse(value["price"].ToString());
+
+            var command = this.Command<UpdatePriceSnapshotCommand>();
+            await command.Process(this.CurrentContext, itemId, price).ConfigureAwait(false);
+
+            return new ObjectResult(command);
+        }
     }
 }

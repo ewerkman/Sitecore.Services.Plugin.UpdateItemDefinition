@@ -38,9 +38,19 @@ namespace Sitecore.Services.Plugin.Sample
             updateItemDefinitionAction.ReturnsFromEntitySet<CommerceCommand>("Commands");
 
             ActionConfiguration createPriceCardAction = modelBuilder.Action("CreatePriceCard");
-            updateItemDefinitionAction.Parameter<string>("itemId");
-            updateItemDefinitionAction.Parameter<decimal>("price");
+            createPriceCardAction.Parameter<string>("itemId");
+            createPriceCardAction.Parameter<decimal>("price");
             createPriceCardAction.ReturnsFromEntitySet<CommerceCommand>("Commands");
+
+            ActionConfiguration updatePriceSnapshotAction = modelBuilder.Action("UpdatePriceSnapshot");
+            updatePriceSnapshotAction.Parameter<string>("itemId");
+            updatePriceSnapshotAction.Parameter<decimal>("price");
+            updatePriceSnapshotAction.ReturnsFromEntitySet<CommerceCommand>("Commands");
+
+            ActionConfiguration addNewPriceSnapshotAction = modelBuilder.Action("AddNewPriceSnapshot");
+            addNewPriceSnapshotAction.Parameter<string>("itemId");
+            addNewPriceSnapshotAction.Parameter<decimal>("price");
+            addNewPriceSnapshotAction.ReturnsFromEntitySet<CommerceCommand>("Commands");
 
             return Task.FromResult(modelBuilder);
         }

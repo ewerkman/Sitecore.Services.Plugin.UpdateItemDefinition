@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CreatePriceCardCommand.cs" company="Sitecore Corporation">
+// <copyright file="UpdatePriceCardCommand.cs" company="Sitecore Corporation">
 //   Copyright (c) Sitecore Corporation 1999-2020
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -13,45 +13,15 @@ namespace Sitecore.Services.Plugin.Sample.Commands
     using System;
     using System.Threading.Tasks;
 
-    /// <inheritdoc />
-    /// <summary>
-    /// Defines the CreatePriceCardCommand command.
-    /// </summary>
-    public class CreatePriceCardCommand : CommerceCommand
+    public class AddNewPriceSnapshotCommand : CommerceCommand
     {
-        /// <summary>
-        /// Gets or sets the commander.
-        /// </summary>
-        /// <value>
-        /// The commander.
-        /// </value>
         protected CommerceCommander Commander { get; set; }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:Sitecore.Services.Plugin.Sample.Commands.CreatePriceCardCommand" /> class.
-        /// </summary>
-        /// <param name="pipeline">
-        /// The pipeline.
-        /// </param>
-        /// <param name="serviceProvider">The service provider</param>
-        public CreatePriceCardCommand(CommerceCommander commander, IServiceProvider serviceProvider) : base(serviceProvider)
+        public AddNewPriceSnapshotCommand(CommerceCommander commander, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             this.Commander = commander;
         }
 
-        /// <summary>
-        /// The process of the command
-        /// </summary>
-        /// <param name="commerceContext">
-        /// The commerce context
-        /// </param>
-        /// <param name="parameter">
-        /// The parameter for the command
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public async Task<CommerceCommand> Process(CommerceContext commerceContext, string itemId, decimal price)
         {
             using (var activity = CommandActivity.Start(commerceContext, this))
@@ -65,11 +35,12 @@ namespace Sitecore.Services.Plugin.Sample.Commands
                 var sellableItem = await Commander.GetEntity<SellableItem>(commerceContext, productId.ToEntityId<SellableItem>());
 
                 if (sellableItem != null)
-                {   
-                    var priceCard = await Commander.Command<AddPriceCardCommand>().Process(commerceContext, "HerderPreisbuch", "product1");
+                {
+                    var priceCardId = $"HerderPreisbuch-{productId}".ToEntityId<PriceCard>();
+                    var priceCard = await Commander.GetEntity<PriceCard>(commerceContext, priceCardId);
 
                     if (priceCard != null)
-                    {   /// Create a snapshot... 
+                    {   /// Create a new snapshot... 
                         var snapshotStartDate = DateTimeOffset.Now;
                         int quantity = 1;
                         string currency = "EUR";
@@ -89,12 +60,14 @@ namespace Sitecore.Services.Plugin.Sample.Commands
                         // Save the price card
                         await Commander.PersistEntity(commerceContext, priceCard);
 
-                        // Associate price card with sellable item
+                        // Associate price card with sellable item (if this has not been done already)
                         var priceCardPolicy = sellableItem.GetPolicy<PriceCardPolicy>();
                         priceCardPolicy.PriceCardName = priceCard.Name;
 
                         await Commander.PersistEntity(commerceContext, sellableItem);
                     }
+
+                    // We assume the pricecard is already attached to the sellable item so we don't save it
                 }
 
                 return this;
