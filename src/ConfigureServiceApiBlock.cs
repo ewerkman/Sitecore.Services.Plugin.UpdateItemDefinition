@@ -14,6 +14,7 @@ namespace Sitecore.Services.Plugin.Sample
     using Sitecore.Commerce.Core.Commands;
     using Sitecore.Framework.Conditions;
     using Sitecore.Framework.Pipelines;
+    using Sitecore.Services.Plugin.Sample.Models;
 
     /// <summary>
     /// Defines a block which configures the OData model
@@ -51,6 +52,12 @@ namespace Sitecore.Services.Plugin.Sample
             addNewPriceSnapshotAction.Parameter<string>("itemId");
             addNewPriceSnapshotAction.Parameter<decimal>("price");
             addNewPriceSnapshotAction.ReturnsFromEntitySet<CommerceCommand>("Commands");
+
+            ActionConfiguration getDeliveryTimeAction = modelBuilder.Action("GetDeliveryTime");
+            addNewPriceSnapshotAction.CollectionParameter<string>("itemIds");
+            addNewPriceSnapshotAction.Parameter<string>("primaryInventorySetId");
+            addNewPriceSnapshotAction.Parameter<string>("secondaryInventorySetId");
+            addNewPriceSnapshotAction.ReturnsCollection<DeliveryTime>();
 
             return Task.FromResult(modelBuilder);
         }

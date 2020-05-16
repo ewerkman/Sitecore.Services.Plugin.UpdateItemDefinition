@@ -13,6 +13,9 @@ namespace Sitecore.Services.Plugin.Sample.Commands
     using System;
     using System.Threading.Tasks;
 
+    /// <summary>
+    ///     This command will add a new snapshot to an existing price card using the current time as the start of the snapshot.
+    /// </summary>
     public class AddNewPriceSnapshotCommand : CommerceCommand
     {
         protected CommerceCommander Commander { get; set; }
