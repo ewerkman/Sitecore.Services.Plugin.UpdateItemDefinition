@@ -1,16 +1,12 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ConfigureSitecore.cs" company="Sitecore Corporation">
-//   Copyright (c) Sitecore Corporation 1999-2017
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace Sitecore.Services.Plugin.Sample
 {
     using System.Reflection;
     using Microsoft.Extensions.DependencyInjection;
     using Sitecore.Commerce.Core;
+    using Sitecore.Commerce.Plugin.Catalog;
     using Sitecore.Framework.Configuration;
     using Sitecore.Framework.Pipelines.Definitions.Extensions;
+    using Sitecore.Services.Plugin.Sample.Pipelines.Blocks;
 
     public class ConfigureSitecore : IConfigureSitecore
     {       
@@ -23,6 +19,11 @@ namespace Sitecore.Services.Plugin.Sample
             services.Sitecore().Pipelines(config => config
               .ConfigurePipeline<IConfigureServiceApiPipeline>(configure => configure.Add<ConfigureServiceApiBlock>())
               );
+
+            services.Sitecore().Pipelines(config =>
+                    config.ConfigurePipeline<ICreateSellableItemPipeline>(c =>
+                       c.Add<AddToNameListBlock>().After<CreateSellableItemBlock>()
+                    ));
 
             services.RegisterAllCommands(assembly);
         }
