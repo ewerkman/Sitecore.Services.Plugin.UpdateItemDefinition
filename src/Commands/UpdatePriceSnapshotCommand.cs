@@ -11,6 +11,7 @@ namespace Sitecore.Services.Plugin.Sample.Commands
     using Sitecore.Commerce.Plugin.Catalog;
     using Sitecore.Commerce.Plugin.Pricing;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -79,6 +80,11 @@ namespace Sitecore.Services.Plugin.Sample.Commands
 
                 return this;
             }
+        }
+
+        internal Task Process(CommerceContext currentContext, IList<Party> list)
+        {
+            throw new NotImplementedException();
         }
     }
 }

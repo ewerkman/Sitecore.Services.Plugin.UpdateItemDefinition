@@ -59,6 +59,16 @@ namespace Sitecore.Services.Plugin.Sample
             addNewPriceSnapshotAction.Parameter<string>("secondaryInventorySetId");
             addNewPriceSnapshotAction.ReturnsCollection<DeliveryTime>();
 
+            ActionConfiguration addPartyAction = modelBuilder.Action("AddParty");
+            addPartyAction.Parameter<string>("cartId");
+            addPartyAction.Parameter<Party>("party");
+            addPartyAction.ReturnsFromEntitySet<CommerceCommand>("Commands");
+
+            ActionConfiguration removePartyAction = modelBuilder.Action("RemoveParty");
+            removePartyAction.Parameter<string>("cartId");
+            removePartyAction.Parameter<Party>("addressName");
+            removePartyAction.ReturnsFromEntitySet<CommerceCommand>("Commands");
+
             return Task.FromResult(modelBuilder);
         }
     }

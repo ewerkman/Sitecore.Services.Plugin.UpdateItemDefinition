@@ -11,7 +11,9 @@ namespace Sitecore.Services.Plugin.Sample.Controllers
     using Sitecore.Commerce.Core;
     using Sitecore.Commerce.Plugin.Catalog;
     using Sitecore.Services.Plugin.Sample.Commands;
+    using Sitecore.Services.Plugin.Sample.Commands.Parties;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http.OData;
 
@@ -110,6 +112,52 @@ namespace Sitecore.Services.Plugin.Sample.Controllers
 
             var command = this.Command<UpdatePriceSnapshotCommand>();
             await command.Process(this.CurrentContext, itemId, price).ConfigureAwait(false);
+
+            return new ObjectResult(command);
+        }
+
+        [HttpPut]
+        [Route("AddParty")]
+        public async Task<IActionResult> AddParty([FromBody] ODataActionParameters value)
+        {
+            if (!this.ModelState.IsValid || value == null)
+            {
+                return (IActionResult)new BadRequestObjectResult(this.ModelState);
+            }
+
+            if (!value.ContainsKey("cartId") || !value.ContainsKey("party"))
+            {
+                return (IActionResult)new BadRequestObjectResult((object)value);
+            }
+
+            var cartId = (string)value["cartId"];
+            var party = ((JObject)value["party"]).ToObject<Party>();
+
+            var command = this.Command<AddPartyCommand>();
+            await command.Process(this.CurrentContext, cartId, party).ConfigureAwait(false);
+
+            return new ObjectResult(command);
+        }
+
+        [HttpPut]
+        [Route("RemoveParty")]
+        public async Task<IActionResult> RemoveParty([FromBody] ODataActionParameters value)
+        {
+            if (!this.ModelState.IsValid || value == null)
+            {
+                return (IActionResult)new BadRequestObjectResult(this.ModelState);
+            }
+
+            if (!value.ContainsKey("cartId") || !value.ContainsKey("addressName"))
+            {
+                return (IActionResult)new BadRequestObjectResult((object)value);
+            }
+
+            var cartId = (string)value["cartId"];
+            var addressName = (string)value["addressName"];
+
+            var command = this.Command<RemovePartyCommand>();
+            await command.Process(this.CurrentContext, cartId, addressName).ConfigureAwait(false);
 
             return new ObjectResult(command);
         }
