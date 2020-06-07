@@ -7,8 +7,10 @@ namespace Sitecore.Services.Plugin.Sample
     using Sitecore.Commerce.Plugin.Catalog;
     using Sitecore.Framework.Configuration;
     using Sitecore.Framework.Pipelines.Definitions.Extensions;
+    using Sitecore.Commerce.Plugin.Fulfillment;
     using Sitecore.Services.Plugin.Sample.Pipelines.Blocks;
     using Sitecore.Services.Plugin.Sample.Pipelines.Blocks.DoActions;
+    using Sitecore.Services.Plugin.Sample.Pipelines.Blocks.Fulfillment;
 
     public class ConfigureSitecore : IConfigureSitecore
     {
@@ -29,6 +31,10 @@ namespace Sitecore.Services.Plugin.Sample
                     .ConfigurePipeline<IDoActionPipeline>(c =>
                         c.Add<DoActionExtendAssociateSellableItemBlock>().After<DoActionAssociateSellableItemBlock>()
                     )
+                    .ConfigurePipeline<IGetCartLineFulfillmentMethodsPipeline>(c =>
+                        c.Add<AddArgumentToContextBlock>().Before<FilterCartLineFulfillmentMethodsBlock>()
+                         .Add<FilterFulfillmentMethodsBlock>().After<FilterCartLineFulfillmentMethodsBlock>()
+                     )
                 );
 
             services.RegisterAllCommands(assembly);
