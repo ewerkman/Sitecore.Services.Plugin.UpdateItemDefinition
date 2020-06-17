@@ -1,0 +1,16 @@
+﻿@model Sample.Commerce.Engine.Connect.Entities.CustomCart
+
+@Model.Name
+
+@Model.CustomParties.Count
+
+@foreach (var party in Model.CustomParties)
+{
+    <h2>Party</h2>
+    @party.Name<br/>
+    @party.Address1<br/>
+    @party.Address2<br/>
+    @party.Country<br/>
+}
+
+Created: @Model.Created
