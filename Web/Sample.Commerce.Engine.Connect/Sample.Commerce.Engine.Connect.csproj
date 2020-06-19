@@ -109,6 +109,8 @@
     <ItemGroup>
         <None Include="App_Config\Include\Z.Overrides\Sample.Commerce.Engine.Connect.config" />
         <None Include="Web.config" />
+        <Content Include="Views\Sample\BasketToOrder.cshtml" />
+        <Content Include="Views\Sample\GetCartLineFulfillmentMethods.cshtml" />
         <Content Include="Views\Sample\Index.cshtml" />
         <Content Include="Web.Debug.config">
             <DependentUpon>Web.config</DependentUpon>

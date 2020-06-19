@@ -1,0 +1,25 @@
+﻿@model Sitecore.Commerce.Services.Shipping.GetShippingMethodsResult
+
+@if (!Model.Success)
+{
+    <ul>
+        @foreach (var message in Model.SystemMessages)
+        {
+            <li>@message.Message</li>
+        }
+    </ul>
+    return;
+}
+
+
+@foreach (var item in Model.ShippingMethodsPerItem)
+{
+    <b>Line id: @item.LineId</b><br/>
+    <span>Available Shipping methods:</span>
+    <ul>
+        @foreach (var shippingMethod in item.ShippingMethods)
+        {
+            <li>@shippingMethod.Name</li>
+        }
+    </ul>
+}
