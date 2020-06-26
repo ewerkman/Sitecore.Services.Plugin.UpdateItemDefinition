@@ -104,6 +104,7 @@
         <Compile Include="Controllers\BraintreeController.cs" />
         <Compile Include="Controllers\SampleController.cs" />
         <Compile Include="Entities\CustomCart.cs" />
+        <Compile Include="Entities\CustomParty.cs" />
         <Compile Include="Pipelines\Carts\TranslateCustomCartToEntity.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
@@ -112,6 +113,7 @@
         <None Include="Web.config" />
         <Content Include="Views\Braintree\Index.cshtml" />
         <Content Include="Views\Braintree\SubmitPayment.cshtml" />
+        <Content Include="Views\Sample\AddAdditionalPartyToCart.cshtml" />
         <Content Include="Views\Sample\BasketToOrder.cshtml" />
         <Content Include="Views\Sample\Cart.cshtml" />
         <Content Include="Views\Sample\GetCartLineFulfillmentMethods.cshtml" />

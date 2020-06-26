@@ -119,4 +119,22 @@
     {
         <li>@payment.PaymentMethodID</li>
     }
+
+    foreach (var party in cart.CustomParties)
+    {
+        <hr/>
+        @party.Company<br/>
+        @party.Gender<br/>
+        @party.Title<br/>
+        @party.FirstName<br/>
+        @party.LastName<br/>
+        @party.Email<br/>
+        @party.Address1<br/>
+        @party.Address2<br/>
+        @party.City<br/>
+        @party.Country<br/>
+        @party.CountryCode<br/>
+        @party.IsCompany<br/>
+        @party.Phone<br/>
+    }
 }

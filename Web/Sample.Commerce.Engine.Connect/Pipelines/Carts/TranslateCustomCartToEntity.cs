@@ -6,6 +6,7 @@ using Sitecore.Commerce.Engine.Connect.Pipelines.Arguments;
 using Sitecore.Commerce.Engine.Connect.Pipelines.Carts;
 using Sitecore.Commerce.Entities;
 using Sitecore.Services.Plugin.Sample.Components;
+using Sitecore.Services.Plugin.Sample.Policies;
 
 namespace Sample.Commerce.Engine.Connect.Pipelines.Carts
 {
@@ -22,7 +23,11 @@ namespace Sample.Commerce.Engine.Connect.Pipelines.Carts
             var customCart = destination as CustomCart;
 
             var additionalParties = source.Components.OfType<AdditionalPartiesComponent>().FirstOrDefault();
-            additionalParties?.Parties.ForEach( party => customCart.CustomParties.Add(new CommerceParty() {
+            additionalParties?.Parties.ForEach( party =>
+            {
+                var extendedPartyPolicy = party.Policies.OfType<ExtendedPartyPolicy>().FirstOrDefault();
+                customCart.CustomParties.Add(new CustomParty()
+                {
                     FirstName = party.FirstName,
                     LastName = party.LastName,
                     Address1 = party.Address1,
@@ -30,9 +35,13 @@ namespace Sample.Commerce.Engine.Connect.Pipelines.Carts
                     City = party.City,
                     Country = party.Country,
                     State = party.State,
-                    ZipPostalCode = party.ZipPostalCode
-                })
-            );
+                    ZipPostalCode = party.ZipPostalCode,
+                    IsCompany = extendedPartyPolicy?.IsCompany ?? false,
+                    Gender = extendedPartyPolicy?.Gender,
+                    Title = extendedPartyPolicy?.Title,
+                    Phone = extendedPartyPolicy?.Phone
+                });
+            });
         }
     }
 }

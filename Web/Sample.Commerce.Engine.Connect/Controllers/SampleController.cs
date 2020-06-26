@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.Mvc;
 using Sample.Commerce.Engine.Connect.Entities;
 using Sitecore.Analytics;
+using Sitecore.Commerce.Core;
+using Sitecore.Commerce.Engine.Connect;
 using Sitecore.Commerce.Engine.Connect.Entities;
 using Sitecore.Commerce.Engine.Connect.Pipelines.Arguments;
 using Sitecore.Commerce.Engine.Connect.Services.Carts;
@@ -11,12 +14,14 @@ using Sitecore.Commerce.Entities;
 using Sitecore.Commerce.Entities.Carts;
 using Sitecore.Commerce.Entities.GiftCards;
 using Sitecore.Commerce.Entities.Shipping;
+using Sitecore.Commerce.ServiceProxy;
 using Sitecore.Commerce.Services.Carts;
 using Sitecore.Commerce.Services.Orders;
 using Sitecore.Commerce.Services.Shipping;
 using Sitecore.Configuration;
 using Sitecore.Diagnostics;
 using Sitecore.Eventing;
+using Sitecore.Services.Plugin.Sample.Policies;
 using GetShippingMethodsRequest = Sitecore.Commerce.Engine.Connect.Services.Shipping.GetShippingMethodsRequest;
 
 namespace Sample.Commerce.Engine.Connect.Controllers
@@ -38,6 +43,23 @@ namespace Sample.Commerce.Engine.Connect.Controllers
             var loadCartResult = _cartServiceProvider.LoadCart(loadCartRequest);
 
             return View("Cart", loadCartResult);
+        }
+
+        public ActionResult AddProduct()
+        {
+            var loadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Cart01", "1234");
+            var loadCartResult = _cartServiceProvider.LoadCart(loadCartRequest);
+            var cart = loadCartResult.Cart as CustomCart;
+
+            // Add a cart line: note that adding a line for the same product twice will update the quantity, not add a line: this is configured in commerce engine (look for RollupCartLinesPolicy)
+            var lines = new List<CartLine>();
+            var cartLine = new CommerceCartLine("Neu", "47838_aus_allen_sternen_liebe_cd", "", 1.0M);
+            lines.Add(cartLine);
+
+            var addLinesRequest = new AddCartLinesRequest(cart, lines);
+            var addLinesResult = _cartServiceProvider.AddCartLines(addLinesRequest);
+            
+            return View("Cart", addLinesResult);
         }
 
         public ActionResult GetCartLineFulfillmentMethods()
@@ -406,9 +428,6 @@ namespace Sample.Commerce.Engine.Connect.Controllers
 
             cart.Email = "erwin.werkman@sitecore.com"; // This is necessary otherwise the cart will not become an order
 
-            var commerceTotal = cart.Total as CommerceTotal;
-            commerceTotal.ShippingTotal
-
             // Save the cart as an order
             var submitVisitorOrderRequest = new SubmitVisitorOrderRequest(cart);
             var submitVisitorOrderResult = _orderServiceProvider.SubmitVisitorOrder(submitVisitorOrderRequest);
@@ -432,6 +451,23 @@ namespace Sample.Commerce.Engine.Connect.Controllers
             var result = serviceProvider.AddPromoCode(request);
 
             return View("Cart", result);
+        }
+
+        public ActionResult AddAdditionalPartyToCart()
+        {
+            Sitecore.Commerce.Core.Party party = new Sitecore.Commerce.Core.Party
+            {
+                AddressName = "Billing Address",
+                Address1 = "Main Street",
+                City = "Big City"
+            };
+            party.Policies = new ObservableCollection<Policy>();
+            party.Policies.Add(new ExtendedPartyPolicy(){ IsCompany = false, Gender = "M", Phone = "0123456789", Title = "Dr."});
+            
+            var container = EngineConnectUtility.GetShopsContainer(shopName: "CommerceEngineDefaultStorefront", customerId: "1234" );
+            var command = Proxy.DoCommand(container.AddParty("Cart01", party));
+
+            return View();
         }
     }
 }

@@ -6,6 +6,6 @@ namespace Sample.Commerce.Engine.Connect.Entities
 {
     public class CustomCart : CommerceCart
     {
-        public List<CommerceParty> CustomParties { get; set; } = new List<CommerceParty>();
+        public List<CustomParty> CustomParties { get; set; } = new List<CustomParty>();
     }
 }
