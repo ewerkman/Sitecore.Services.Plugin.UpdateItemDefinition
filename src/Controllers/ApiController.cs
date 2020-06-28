@@ -6,6 +6,7 @@
 
 namespace Sitecore.Services.Plugin.Sample.Controllers
 {
+    using BSitecore.Services.Plugin.Sample.Commands;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
     using Sitecore.Commerce.Core;
@@ -59,6 +60,40 @@ namespace Sitecore.Services.Plugin.Sample.Controllers
             return new ObjectResult(result);
         }
 
+        [HttpPost]
+        [Route("GetNextCounterValue")]
+        public async Task<IActionResult> GetNextCounterValue([FromBody] ODataActionParameters value)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return new BadRequestObjectResult(this.ModelState);
+            }
 
+            if (!value.ContainsKey("counterName"))
+            {
+                return new BadRequestObjectResult(value);
+            }
+
+            var counterName = (string)value["counterName"];
+            var result = await Command<GetNextValueCommand>().Process(CurrentContext, counterName).ConfigureAwait(false);
+
+            return new ObjectResult(result);
+        }
+
+        [HttpPost]
+        [Route("GetOrdernumberForCart")]
+        public async Task<IActionResult> GetOrdernumberForCart([FromBody] ODataActionParameters value)
+        {
+            if (!value.ContainsKey("cartId"))
+            {
+                return new BadRequestObjectResult(value);
+            }
+
+            var cartId = (string)value["cartId"];
+
+            var ordernumber = await Command<AssignOrdernumberCommand>().Process(CurrentContext, cartId).ConfigureAwait(false);
+
+            return new ObjectResult(ordernumber);
+        }
     }
 }

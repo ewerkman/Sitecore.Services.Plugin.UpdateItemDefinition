@@ -161,5 +161,34 @@ namespace Sitecore.Services.Plugin.Sample.Controllers
 
             return new ObjectResult(command);
         }
+
+        [HttpPut]
+        [Route("CreateCounter")]
+        public async Task<IActionResult> CreateCounter([FromBody] ODataActionParameters value)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return new BadRequestObjectResult(this.ModelState);
+            }
+
+            if (!value.ContainsKey("counterName"))
+            {
+                return new BadRequestObjectResult(value);
+            }
+
+            if (!value.ContainsKey("startValue"))
+            {
+                return new BadRequestObjectResult(value);
+            }
+
+            var counterName = (string)value["counterName"];
+            var startValue = (long)value["startValue"];
+
+            var command = Command<CreateCounterCommand>();
+
+            var result = await command.Process(CurrentContext, counterName, startValue).ConfigureAwait(false);
+
+            return new ObjectResult(command);
+        }
     }
 }

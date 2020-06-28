@@ -17,6 +17,7 @@
     <PackageReference Include="Sitecore.Commerce.Plugin.Fulfillment" Version="4.0.27" />
     <PackageReference Include="Sitecore.Commerce.Plugin.Inventory" Version="4.0.26" />
     <PackageReference Include="Sitecore.Commerce.Plugin.Management" Version="4.0.26" />
+    <PackageReference Include="Sitecore.Commerce.Plugin.Orders" Version="3.0.10" />
     <PackageReference Include="Sitecore.Commerce.Plugin.Pricing" Version="4.0.13" />
   </ItemGroup>
 
@@ -36,6 +37,10 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
     <Reference Include="System.Transactions" />
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

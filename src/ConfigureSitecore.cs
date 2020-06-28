@@ -11,6 +11,8 @@ namespace Sitecore.Services.Plugin.Sample
     using Sitecore.Services.Plugin.Sample.Pipelines.Blocks;
     using Sitecore.Services.Plugin.Sample.Pipelines.Blocks.DoActions;
     using Sitecore.Services.Plugin.Sample.Pipelines.Blocks.Fulfillment;
+    using Sitecore.Commerce.Plugin.Orders;
+    using Sitecore.Services.Plugin.Sample.Pipelines;
 
     public class ConfigureSitecore : IConfigureSitecore
     {
@@ -35,6 +37,16 @@ namespace Sitecore.Services.Plugin.Sample
                         c.Add<AddArgumentToContextBlock>().Before<FilterCartLineFulfillmentMethodsBlock>()
                          .Add<FilterFulfillmentMethodsBlock>().After<FilterCartLineFulfillmentMethodsBlock>()
                      )
+                     .ConfigurePipeline<IOrderPlacedPipeline>(c =>
+                        c.Replace<OrderPlacedAssignConfirmationIdBlock, OrderPlacedAssignOrderNumberBlock>()
+                        )
+                    .AddPipeline<ICreateCounterPipeline, CreateCounterPipeline>(pipeline => pipeline
+                       .Add<CreateCounterBlock>()
+                       .Add<PersistCounterBlock>()
+                       )
+                  .AddPipeline<IGetNextCounterValuePipeline, GetNextCounterValuePipeline>(pipeline => pipeline
+                       .Add<GetNextCounterValueBlock>()
+                        )
                 );
 
             services.RegisterAllCommands(assembly);

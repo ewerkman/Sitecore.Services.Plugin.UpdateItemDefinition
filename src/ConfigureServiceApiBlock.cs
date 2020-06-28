@@ -69,6 +69,22 @@ namespace Sitecore.Services.Plugin.Sample
             removePartyAction.Parameter<Party>("addressName");
             removePartyAction.ReturnsFromEntitySet<CommerceCommand>("Commands");
 
+
+            // Counters
+            var createCounterValueAction = modelBuilder.Action("CreateCounter");
+            createCounterValueAction.Parameter<string>("counterName");
+            createCounterValueAction.Parameter<long>("startValue");
+            createCounterValueAction.ReturnsFromEntitySet<CommerceCommand>("Commands");
+
+            var getNextCounterValueAction = modelBuilder.Action("GetNextCounterValue");
+            getNextCounterValueAction.Parameter<string>("counterName");
+            getNextCounterValueAction.Returns<long>();
+
+            var getOrdernumberForCartAction = modelBuilder.Action("GetOrdernumberForCart");
+            getOrdernumberForCartAction.Parameter<string>("cartId");
+            getOrdernumberForCartAction.Returns<string>();
+
+
             return Task.FromResult(modelBuilder);
         }
     }
