@@ -162,9 +162,9 @@ namespace Sample.Commerce.Engine.Connect.Controllers
             shippingAddress.Name = "Shipping";
             shippingAddress.Address1 = "Barbara Strozzilaan 201";
             shippingAddress.Company = "Sitecore";
-            shippingAddress.Country = "The Netherlands";
-            shippingAddress.State = "ZH"; // State is checked by commerce engine: you can configure it in Commerce 
-            shippingAddress.CountryCode = "NL"; // Country is checked by commerce engine
+            shippingAddress.Country = "Canada";
+            shippingAddress.State = "ON"; // State is checked by commerce engine: you can configure it in Commerce 
+            shippingAddress.CountryCode = "CA"; // Country is checked by commerce engine
             shippingAddress.LastName = "Werkman";
             shippingAddress.FirstName = "Erwin";
             shippingAddress.City = "Amsterdam";
@@ -219,9 +219,9 @@ namespace Sample.Commerce.Engine.Connect.Controllers
             billingAddress.Name = "Billing";
             billingAddress.Address1 = "Dorpsstraat 50";
             billingAddress.Company = "Sitecore";
-            billingAddress.Country = "The Netherlands";
-            billingAddress.State = "ZH"; // State is checked: you can configure it in Commerce 
-            billingAddress.CountryCode = "NL";
+            billingAddress.Country = "Canada";
+            billingAddress.State = "ON"; // State is checked: you can configure it in Commerce 
+            billingAddress.CountryCode = "CA";
             billingAddress.LastName = "Werkman";
             billingAddress.FirstName = "Erwin";
             billingAddress.City = "Amsterdam";
@@ -243,18 +243,20 @@ namespace Sample.Commerce.Engine.Connect.Controllers
 
             payments.Add(federatedPaymentInfo);
             */
-
+            
+            /*
             var giftCardPaymentInfo = new GiftCardPaymentInfo();
             giftCardPaymentInfo.PaymentMethodID = "B5E5464E-C851-4C3C-8086-A4A874DD2DB0"; // GiftCard
-            giftCardPaymentInfo.Amount = cart.Total.Amount / 2;
+            giftCardPaymentInfo.Amount = cart.Total.Amount;
             giftCardPaymentInfo.ExternalId = "GC1000000"; // This is the number of the giftcard
             giftCardPaymentInfo.PartyID = billingAddress.ExternalId;
 
             payments.Add(giftCardPaymentInfo);
-
+            */
+            
             var simplePaymentInfo = new SimplePaymentInfo();
             simplePaymentInfo.PaymentMethodID = "7A6DF11A-CA92-4D7E-BF7C-1CDBF4F158E7";
-            simplePaymentInfo.Amount = cart.Total.Amount / 2;
+            simplePaymentInfo.Amount = cart.Total.Amount;
 
             payments.Add(simplePaymentInfo);
 
@@ -270,6 +272,29 @@ namespace Sample.Commerce.Engine.Connect.Controllers
                 String.Join("|", freshCartResult.SystemMessages.Select(e => e.Message)));
 
             return View("Cart", freshCartResult);
+        }
+
+        public ActionResult RemoveSimplePayment()
+        {
+            var shopName =
+                "CommerceEngineDefaultStorefront"; // Better use a configured store, not CommerceEngineDefaultStorefront as it's not really configured
+            var cartName = "Cart01";
+            var userId = "1234";
+
+            // Get a cart
+            var loadCartRequest = new LoadCartByNameRequest(shopName, cartName, userId);
+            var cartResult = _cartServiceProvider.LoadCart(loadCartRequest);
+
+            Assert.IsTrue(cartResult.Success, String.Join("|", cartResult.SystemMessages.Select(e => e.Message)));
+
+            var cart = cartResult.Cart;
+
+            var removePaymentInfoRequest = new RemovePaymentInfoRequest(cart, cart.Payment);
+            var removePaymentInfoResult = _cartServiceProvider.RemovePaymentInfo(removePaymentInfoRequest);
+            
+            Assert.IsTrue(removePaymentInfoResult.Success, String.Join("|", removePaymentInfoResult.SystemMessages.Select(e => e.Message)));
+
+            return View(removePaymentInfoResult);
         }
 
         public ActionResult BasketToOrder()
@@ -388,9 +413,9 @@ namespace Sample.Commerce.Engine.Connect.Controllers
             billingAddress.Name = "Billing";
             billingAddress.Address1 = "Dorpsstraat 50";
             billingAddress.Company = "Sitecore";
-            billingAddress.Country = "The Netherlands";
-            billingAddress.State = "ZH"; // State is checked: you can configure it in Commerce 
-            billingAddress.CountryCode = "NL";
+            billingAddress.Country = "Canada";
+            billingAddress.State = "ON"; // State is checked: you can configure it in Commerce 
+            billingAddress.CountryCode = "CA";
             billingAddress.LastName = "Werkman";
             billingAddress.FirstName = "Erwin";
             billingAddress.City = "Amsterdam";
