@@ -1,10 +1,13 @@
 ﻿using System.Linq;
+using Commerce.Plugin.Sample.Payment.Components;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using Sample.Commerce.Engine.Connect.Entities;
 using Sitecore.Commerce.Engine.Connect.Entities;
 using Sitecore.Commerce.Engine.Connect.Pipelines.Arguments;
 using Sitecore.Commerce.Engine.Connect.Pipelines.Carts;
 using Sitecore.Commerce.Entities;
+using Sitecore.Commerce.Plugin.Carts;
+using Sitecore.Commerce.Plugin.Payments;
 using Sitecore.Services.Plugin.Sample.Components;
 using Sitecore.Services.Plugin.Sample.Policies;
 
@@ -22,8 +25,34 @@ namespace Sample.Commerce.Engine.Connect.Pipelines.Carts
 
             var customCart = destination as CustomCart;
 
+            this.TranslateCustomPaymentMethods(source, customCart);
+            this.TranslateAdditionalParties(source, customCart);
+        }
+
+        private void TranslateCustomPaymentMethods(Cart source, CustomCart customCart)
+        {
+            var payments = source.Components.OfType<PaymentComponent>().ToList();
+            if (!payments.Any())
+            {
+                return;
+            }
+
+            foreach (var payment in payments)
+            {
+                if (payment is SimplePaymentComponent simplePayment)
+                {
+                    var simplePaymentInfo = this.EntityFactory.Create<SimplePaymentInfo>("SimplePayment");
+                    simplePaymentInfo.PaymentMethodID = simplePayment.PaymentMethod.EntityTarget;
+                    simplePaymentInfo.Amount = simplePayment.Amount.Amount;
+                }
+            }
+
+        }
+
+        private void TranslateAdditionalParties(Cart source, CustomCart customCart)
+        {
             var additionalParties = source.Components.OfType<AdditionalPartiesComponent>().FirstOrDefault();
-            additionalParties?.Parties.ForEach( party =>
+            additionalParties?.Parties.ForEach(party =>
             {
                 var extendedPartyPolicy = party.Policies.OfType<ExtendedPartyPolicy>().FirstOrDefault();
                 customCart.CustomParties.Add(new CustomParty()

@@ -105,6 +105,8 @@
         <Compile Include="Controllers\SampleController.cs" />
         <Compile Include="Entities\CustomCart.cs" />
         <Compile Include="Entities\CustomParty.cs" />
+        <Compile Include="Entities\SimplePaymentInfo.cs" />
+        <Compile Include="Pipelines\Carts\AddSimplePaymentToCart.cs" />
         <Compile Include="Pipelines\Carts\TranslateCustomCartToEntity.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

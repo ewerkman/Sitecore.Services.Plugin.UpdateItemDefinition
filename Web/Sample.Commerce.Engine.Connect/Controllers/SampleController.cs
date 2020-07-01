@@ -58,7 +58,7 @@ namespace Sample.Commerce.Engine.Connect.Controllers
 
             var addLinesRequest = new AddCartLinesRequest(cart, lines);
             var addLinesResult = _cartServiceProvider.AddCartLines(addLinesRequest);
-            
+
             return View("Cart", addLinesResult);
         }
 
@@ -246,11 +246,17 @@ namespace Sample.Commerce.Engine.Connect.Controllers
 
             var giftCardPaymentInfo = new GiftCardPaymentInfo();
             giftCardPaymentInfo.PaymentMethodID = "B5E5464E-C851-4C3C-8086-A4A874DD2DB0"; // GiftCard
-            giftCardPaymentInfo.Amount = cart.Total.Amount;
+            giftCardPaymentInfo.Amount = cart.Total.Amount / 2;
             giftCardPaymentInfo.ExternalId = "GC1000000"; // This is the number of the giftcard
             giftCardPaymentInfo.PartyID = billingAddress.ExternalId;
 
             payments.Add(giftCardPaymentInfo);
+
+            var simplePaymentInfo = new SimplePaymentInfo();
+            simplePaymentInfo.PaymentMethodID = "7A6DF11A-CA92-4D7E-BF7C-1CDBF4F158E7";
+            simplePaymentInfo.Amount = cart.Total.Amount / 2;
+
+            payments.Add(simplePaymentInfo);
 
             var addPaymentInfoRequest = new AddPaymentInfoRequest(cart, payments);
             var addPaymentInfoResult = _cartServiceProvider.AddPaymentInfo(addPaymentInfoRequest);
@@ -289,7 +295,7 @@ namespace Sample.Commerce.Engine.Connect.Controllers
 
             // Add a cart line: note that adding a line for the same product twice will update the quantity, not add a line: this is configured in commerce engine (look for RollupCartLinesPolicy)
             var lines = new List<CartLine>();
-            var cartLine = new CommerceCartLine("Neu", "6042567", "56042567", 1.0M);
+            var cartLine = new CommerceCartLine("Neu", "47838_aus_allen_sternen_liebe_cd", "", 1.0M);
             lines.Add(cartLine);
 
             var addLinesRequest = new AddCartLinesRequest(cart, lines);
@@ -325,9 +331,9 @@ namespace Sample.Commerce.Engine.Connect.Controllers
             shippingAddress.Name = "Shipping";
             shippingAddress.Address1 = "Barbara Strozzilaan 201";
             shippingAddress.Company = "Sitecore";
-            shippingAddress.Country = "The Netherlands";
-            shippingAddress.State = "ZH"; // State is checked by commerce engine: you can configure it in Commerce 
-            shippingAddress.CountryCode = "NL"; // Country is checked by commerce engine
+            shippingAddress.Country = "Canada";
+            shippingAddress.State = "ON"; // State is checked by commerce engine: you can configure it in Commerce 
+            shippingAddress.CountryCode = "CA"; // Country is checked by commerce engine
             shippingAddress.LastName = "Werkman";
             shippingAddress.FirstName = "Erwin";
             shippingAddress.City = "Amsterdam";
@@ -407,13 +413,22 @@ namespace Sample.Commerce.Engine.Connect.Controllers
             payments.Add(federatedPaymentInfo);
             */
 
+            /*
             var giftCardPaymentInfo = new GiftCardPaymentInfo();
             giftCardPaymentInfo.PaymentMethodID = "B5E5464E-C851-4C3C-8086-A4A874DD2DB0"; // GiftCard
             giftCardPaymentInfo.Amount = cart.Total.Amount;
             giftCardPaymentInfo.ExternalId = "GC1000000"; // This is the number of the giftcard
             giftCardPaymentInfo.PartyID = billingAddress.ExternalId;
-
+            
             payments.Add(giftCardPaymentInfo);
+            */
+
+            var simplePaymentInfo = new SimplePaymentInfo();
+            simplePaymentInfo.PaymentMethodID = "7A6DF11A-CA92-4D7E-BF7C-1CDBF4F158E7";
+            simplePaymentInfo.Amount = cart.Total.Amount;
+
+            payments.Add(simplePaymentInfo);
+
 
             var addPaymentInfoRequest = new AddPaymentInfoRequest(cart, payments);
             var addPaymentInfoResult = _cartServiceProvider.AddPaymentInfo(addPaymentInfoRequest);
@@ -462,9 +477,11 @@ namespace Sample.Commerce.Engine.Connect.Controllers
                 City = "Big City"
             };
             party.Policies = new ObservableCollection<Policy>();
-            party.Policies.Add(new ExtendedPartyPolicy(){ IsCompany = false, Gender = "M", Phone = "0123456789", Title = "Dr."});
-            
-            var container = EngineConnectUtility.GetShopsContainer(shopName: "CommerceEngineDefaultStorefront", customerId: "1234" );
+            party.Policies.Add(new ExtendedPartyPolicy()
+                {IsCompany = false, Gender = "M", Phone = "0123456789", Title = "Dr."});
+
+            var container =
+                EngineConnectUtility.GetShopsContainer(shopName: "CommerceEngineDefaultStorefront", customerId: "1234");
             var command = Proxy.DoCommand(container.AddParty("Cart01", party));
 
             return View();
