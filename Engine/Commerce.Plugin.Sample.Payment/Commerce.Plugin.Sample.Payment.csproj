@@ -10,15 +10,26 @@
     <PackageLicenseUrl>http://www.sitecore.net/platform/pricing.aspx</PackageLicenseUrl>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Commands\**" />
+    <Compile Remove="Entities\**" />
+    <Compile Remove="Models\**" />
+    <Compile Remove="Policies\**" />
+    <EmbeddedResource Remove="Commands\**" />
+    <EmbeddedResource Remove="Entities\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Policies\**" />
+    <None Remove="Commands\**" />
+    <None Remove="Entities\**" />
+    <None Remove="Models\**" />
+    <None Remove="Policies\**" />
+  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sitecore.Commerce.Plugin.Catalog" Version="4.0.61" />
-    <PackageReference Include="Sitecore.Commerce.Plugin.Content" Version="4.0.26" />
-    <PackageReference Include="Sitecore.Commerce.Plugin.Fulfillment" Version="4.0.27" />
-    <PackageReference Include="Sitecore.Commerce.Plugin.Inventory" Version="4.0.26" />
-    <PackageReference Include="Sitecore.Commerce.Plugin.Management" Version="4.0.26" />
-    <PackageReference Include="Sitecore.Commerce.Plugin.Orders" Version="3.0.10" />
-    <PackageReference Include="Sitecore.Commerce.Plugin.Pricing" Version="4.0.13" />
+    <PackageReference Include="Sitecore.Commerce.Core">
+      <Version>4.0.72</Version>
+    </PackageReference>
+    <PackageReference Include="Sitecore.Commerce.Plugin.Payments" Version="4.0.27" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,12 +49,4 @@
     <Reference Include="System.Transactions" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>NU1605</NoWarn>
-</PropertyGroup>
 </Project>
