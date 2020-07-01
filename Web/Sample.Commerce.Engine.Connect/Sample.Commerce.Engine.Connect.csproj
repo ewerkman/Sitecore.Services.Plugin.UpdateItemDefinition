@@ -120,6 +120,7 @@
         <Content Include="Views\Sample\Cart.cshtml" />
         <Content Include="Views\Sample\GetCartLineFulfillmentMethods.cshtml" />
         <Content Include="Views\Sample\Index.cshtml" />
+        <Content Include="Views\Sample\RemoveSimplePayment.cshtml" />
         <Content Include="Web.Debug.config">
             <DependentUpon>Web.config</DependentUpon>
         </Content>

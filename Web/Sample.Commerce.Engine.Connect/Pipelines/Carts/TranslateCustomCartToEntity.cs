@@ -42,8 +42,11 @@ namespace Sample.Commerce.Engine.Connect.Pipelines.Carts
                 if (payment is SimplePaymentComponent simplePayment)
                 {
                     var simplePaymentInfo = this.EntityFactory.Create<SimplePaymentInfo>("SimplePayment");
+                    simplePaymentInfo.ExternalId = simplePayment.Id;
                     simplePaymentInfo.PaymentMethodID = simplePayment.PaymentMethod.EntityTarget;
                     simplePaymentInfo.Amount = simplePayment.Amount.Amount;
+                    
+                    customCart.Payment.Add(simplePaymentInfo);
                 }
             }
 
