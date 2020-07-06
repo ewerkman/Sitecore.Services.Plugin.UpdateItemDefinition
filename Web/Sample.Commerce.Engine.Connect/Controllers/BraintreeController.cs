@@ -43,7 +43,7 @@ namespace Sample.Commerce.Engine.Connect.Controllers
         [HttpPost]
         public ActionResult SubmitPayment(string paymentNonce)
         {
-            var loadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Cart01", "1234");
+            var loadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Default", "1234");
             var loadCartResult = _cartServiceProvider.LoadCart(loadCartRequest);
             var cart = loadCartResult.Cart as CommerceCart;
             
@@ -96,7 +96,7 @@ namespace Sample.Commerce.Engine.Connect.Controllers
             Assert.IsTrue(result.Success, String.Join("|", result.SystemMessages.Select(e => e.Message)));
 
             // Reload the cart so we have the latest information on how much we need to pay
-            var reloadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Cart01", "1234");
+            var reloadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Default", "1234");
             var reloadedCartResult = _cartServiceProvider.LoadCart(reloadCartRequest);
 
             Assert.IsTrue(reloadedCartResult.Success,

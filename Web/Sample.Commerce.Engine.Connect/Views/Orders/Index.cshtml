@@ -1,0 +1,31 @@
+﻿@model Sitecore.Commerce.Services.Orders.GetVisitorOrdersResult
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+</head>
+<body>
+<div>
+    @if (!Model.Success)
+    {
+        foreach (var message in Model.SystemMessages)
+        {
+            <li>@message.Message</li>
+        }
+    }
+    else
+    {
+        foreach (var order in Model.OrderHeaders)
+        {
+            <li>@order.OrderID - @order.OrderDate </li>
+        }
+    }
+</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+﻿@model Sitecore.Commerce.Services.Orders.GetVisitorOrderResult
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+</head>
+<body>
+<div>
+       @if (!Model.Success)
+          {
+              foreach (var message in Model.SystemMessages)
+              {
+                  <li>@message.Message</li>
+              }
+          }
+          else
+          {
+              @Model.Order.OrderDate
+              @Model.Order.TrackingNumber
+          }
+</div>
+</body>
+</html>

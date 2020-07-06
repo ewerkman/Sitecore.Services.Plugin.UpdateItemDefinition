@@ -1,0 +1,24 @@
+﻿@model Sitecore.Commerce.Services.Customers.CreateUserResult
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+</head>
+<body>
+<div>
+      @if (!Model.Success)
+      {
+          foreach (var message in Model.SystemMessages)
+          {
+              <li>@message.Message</li>
+          }
+      }
+</div>
+</body>
+</html>

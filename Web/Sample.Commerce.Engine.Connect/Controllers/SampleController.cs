@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Security;
 using Sample.Commerce.Engine.Connect.Entities;
+using Sitecore;
 using Sitecore.Analytics;
 using Sitecore.Commerce.Core;
 using Sitecore.Commerce.Engine.Connect;
@@ -39,7 +41,7 @@ namespace Sample.Commerce.Engine.Connect.Controllers
 
         public ActionResult Index()
         {
-            var loadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Cart01", "1234");
+            var loadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Default", "1234");
             var loadCartResult = _cartServiceProvider.LoadCart(loadCartRequest);
 
             return View("Cart", loadCartResult);
@@ -47,7 +49,7 @@ namespace Sample.Commerce.Engine.Connect.Controllers
 
         public ActionResult AddProduct()
         {
-            var loadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Cart01", "1234");
+            var loadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Default", "1234");
             var loadCartResult = _cartServiceProvider.LoadCart(loadCartRequest);
             var cart = loadCartResult.Cart as CustomCart;
 
@@ -65,7 +67,7 @@ namespace Sample.Commerce.Engine.Connect.Controllers
         public ActionResult GetCartLineFulfillmentMethods()
         {
             // Load a cart
-            var loadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Cart01", "1234");
+            var loadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Default", "1234");
             var loadCartResult = _cartServiceProvider.LoadCart(loadCartRequest);
             var cart = loadCartResult.Cart as CustomCart;
 
@@ -107,7 +109,7 @@ namespace Sample.Commerce.Engine.Connect.Controllers
         {
             var shopName =
                 "CommerceEngineDefaultStorefront"; // Better use a configured store, not CommerceEngineDefaultStorefront as it's not really configured
-            var cartName = "Cart01";
+            var cartName = "Default";
             var userId = "1234";
 
             // Get a cart
@@ -278,8 +280,9 @@ namespace Sample.Commerce.Engine.Connect.Controllers
         {
             var shopName =
                 "CommerceEngineDefaultStorefront"; // Better use a configured store, not CommerceEngineDefaultStorefront as it's not really configured
-            var cartName = "Cart01";
-            var userId = "1234";
+            var cartName = "Default";
+            var userId = "CommerceUsers\\john@abczyx.net";
+            var domain = Context.User.Domain;
 
             // Get a cart
             var loadCartRequest = new LoadCartByNameRequest(shopName, cartName, userId);
@@ -301,8 +304,9 @@ namespace Sample.Commerce.Engine.Connect.Controllers
         {
             var shopName =
                 "CommerceEngineDefaultStorefront"; // Better use a configured store, not CommerceEngineDefaultStorefront as it's not really configured
-            var cartName = "Cart01";
-            var userId = "1234";
+            var cartName = "Default";
+            var userId = "Entity-Customer-34d758ae2d2d472d89014954d0cc4440";
+            var domain = Context.User.Domain;
 
             // Get a cart
             var loadCartRequest = new LoadCartByNameRequest(shopName, cartName, userId);
@@ -480,7 +484,7 @@ namespace Sample.Commerce.Engine.Connect.Controllers
 
         public ActionResult AddPromotionCodeToCart()
         {
-            var loadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Cart01", "1234");
+            var loadCartRequest = new LoadCartRequest("CommerceEngineDefaultStorefront", "Default", "1234");
             var loadCartResult = _cartServiceProvider.LoadCart(loadCartRequest);
             var cart = loadCartResult.Cart as CustomCart;
 
@@ -507,7 +511,7 @@ namespace Sample.Commerce.Engine.Connect.Controllers
 
             var container =
                 EngineConnectUtility.GetShopsContainer(shopName: "CommerceEngineDefaultStorefront", customerId: "1234");
-            var command = Proxy.DoCommand(container.AddParty("Cart01", party));
+            var command = Proxy.DoCommand(container.AddParty("Default", party));
 
             return View();
         }
